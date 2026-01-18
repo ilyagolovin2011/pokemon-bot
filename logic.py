@@ -12,6 +12,9 @@ class Pokemon:
         self.img = self.get_img()
         self.name = self.get_name()
         self.number = self.get_number()
+        self.weight = self.get_weight()
+        self.height = self.get_height()
+        self.type = self.get_type()
 
         Pokemon.pokemons[pokemon_trainer] = self
 
@@ -43,14 +46,45 @@ class Pokemon:
             return (data['id'])
         else:
             return "Pikachu"
+    
+    def get_weight(self):
+        url = f'https://pokeapi.co/api/v2/pokemon/{self.pokemon_number}'
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            return (data['weight'])
+        else:
+            return "Pikachu"
+        
+    def get_height(self):
+        url = f'https://pokeapi.co/api/v2/pokemon/{self.pokemon_number}'
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            return (data['height'])
+        else:
+            return "Pikachu"
+        
+    def get_type(self):
+        url = f'https://pokeapi.co/api/v2/pokemon/{self.pokemon_number}'
+        response = requests.get(url)
+        if response.status_code == 200:
+            data = response.json()
+            return (data['types'][0]['type']['name'])
+        else:
+            return "Pikachu"
+        
+    
 
     # Метод класса для получения информации
     def info(self):
-        return f"Имя твоего покемона: {self.name}, Номер твоего покемона: {self.number}"
+        return f"""Имя твоего покемона: {self.name}
+    Номер твоего покемона: {self.number}
+    Вес твоего покемона: {self.weight}
+    Высота твоего покемона: {self.height}
+    Тип твоего покемона: {self.type}
+"""
 
     # Метод класса для получения картинки покемона
     def show_img(self):
         return self.img
-
-
-
