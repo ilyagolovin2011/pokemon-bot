@@ -1,4 +1,4 @@
-import telebot 
+import telebot, time
 from config import token
 from random import randint
 from logic import Pokemon, Wizard, Fighter
@@ -8,17 +8,32 @@ bot = telebot.TeleBot(token)
 @bot.message_handler(commands=['go'])
 def start(message):
     if message.from_user.username not in Pokemon.pokemons.keys():
-        chance = randint(1,3)
-        if chance == 1:
+        chance = randint(1, 10)
+        if chance <= 7:
             pokemon = Pokemon(message.from_user.username)
-        elif chance == 2:
+        elif chance <= 9:
             pokemon = Wizard(message.from_user.username)
-        elif chance == 3:
+        elif chance == 10:
             pokemon = Fighter(message.from_user.username)
+        
         bot.send_message(message.chat.id, pokemon.info())
         bot.send_photo(message.chat.id, pokemon.show_img())
     else:
         bot.reply_to(message, "Ты уже создал себе покемона")
+
+@bot.message_handler(commands=['heal'])
+def heal_pokemon(message):
+    username = message.from_user.username
+    
+    if username not in Pokemon.pokemons.keys():
+        bot.reply_to(message, "У тебя нет покемона! Сначала создай его с помощью /go")
+        return
+    
+    pokemon = Pokemon.pokemons[username]
+    
+    pokemon.power = randint(10, 20)
+    
+    bot.reply_to(message, f"Ты восстановил силу своего покемона {pokemon.name}!\nТеперь его сила: {pokemon.power}")
 
 @bot.message_handler(commands=['attack'])
 def attack_pok(message):
